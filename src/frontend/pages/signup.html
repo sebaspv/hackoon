@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="../css/login.css">
+  <title>Sign Up</title>
+</head>
+
+<body>
+  <header>
+      <a href="../pages/index.html"><img src="../images/return.png" alt="Return" class="return"></a>
+  </header>
+  
+  <div class="content">
+    <h1>Sign Up</h1>
+    <form class="form" action="#" method="POST">
+      <!-- Campo Usuario  -->
+      <div class="form_input">
+        <input 
+          type="text" 
+          name="usuario" 
+          placeholder="Usuario" 
+          required 
+        />
+        <button 
+          class="borrar" 
+          type="button" 
+          onclick="document.querySelector('[name=usuario]').value = ''"
+        >
+          ✖
+        </button>
+      </div>
+
+      <!-- Campo Correo  -->
+      <div class="form_input">
+        <input 
+          type="text" 
+          name="correo" 
+          placeholder="Correo" 
+          required 
+        />
+        <button 
+          class="borrar" 
+          type="button" 
+          onclick="document.querySelector('[email=correo]').value = ''"
+        >
+          ✖
+        </button>
+      </div>
+
+
+      <!-- Campo Contraseña -->
+      <div class="form_input">
+        <input 
+          type="password" 
+          name="contrasena" 
+          placeholder="Contraseña" 
+          required 
+        />
+        <button 
+          class="borrar" 
+          type="button" 
+          onclick="document.querySelector('[name=contrasena]').value = ''"
+        >
+          ✖
+        </button>
+      </div>
+
+      <!-- Botón Entrar -->
+      <button type="submit" class="entrar">Registrarse</button>
+    </form>
+  </div>
+
+</body>
+
+</html>
