@@ -1,0 +1,125 @@
+/* Estilos generales */
+body {
+    background-color: #2C2C2C;
+    color: white;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Título */
+#title {
+    font-weight: bold;
+    font-size: xx-large;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-top: 2rem;
+    padding-left: 5rem;
+}
+
+/* Botón de regreso */
+#arrow_back {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding-right: 2dvh;
+}
+
+/* Dificultad */
+#dificultad {
+    border-radius: 10px;
+    background-color: #63EF67;
+    color: black;
+    font-size: medium;
+    padding: 0.3rem 1rem;
+    margin-left: 1rem;
+}
+
+/* Etiquetas */
+#etiquetas {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding-left: 5rem;
+    padding-top: 2rem;
+}
+
+.etiqueta {
+    background-color: white;
+    color: black;
+    border-radius: 10px;
+    padding: 0.5rem 1rem;
+}
+
+/* Contenedor principal */
+#recuadros {
+    display: flex;
+    gap: 2rem;
+    margin-top: 2rem;
+    padding-left: 5rem;
+    align-items: flex-start; /* Alinea los elementos en la parte superior */
+}
+
+/* Caja de pregunta */
+#recuadro-pregunta {
+    background-color: #D3D3D3;
+    color: black;
+    padding: 1.5rem;
+    border-radius: 10px;
+    width: 50vw; /* Ajuste para abarcar el espacio adecuado */
+    min-height: 25vh;
+    font-size: 1.2rem;
+}
+
+/* Caja de pista */
+#recuadro-pista {
+    background-color: #D3D3D3;
+    color: black;
+    padding: 1.5rem;
+    border-radius: 10px;
+    min-width: 12vw;
+    width: 30vw;
+    min-height: 12vh;
+    font-size: 1.2rem;
+}
+
+/* Estilos de los títulos */
+.titulo {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+/* Estilos de pregunta y pista */
+.pregunta, .pista {
+    margin-top: 1rem;
+    font-size: 1.3rem;
+}
+
+/* Respuestas */
+#respuestas {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    font-size: 1.2rem;
+}
+
+/* Botón de completar reto */
+#submit {
+    padding-left: 62%;
+    display: flex;
+    justify-content: center;
+    min-width: 12vw;
+    width: 30vw;
+}
+
+#submit_button {
+    font-weight: bold;
+    font-size: larger;
+    background-color: #D3D3D3;
+    color: black;
+    border-radius: 10px;
+    padding: 0.7rem 1.5rem;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
