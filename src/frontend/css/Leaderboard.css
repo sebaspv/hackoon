@@ -1,0 +1,67 @@
+body {
+    background: #303030;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+  }
+  
+  .back-button {
+    font-size: 3rem;
+    color: white;
+    position: absolute;
+    top: 2.5rem;
+    left: 3rem;
+    cursor: pointer;
+    background: none;
+    border: none;
+  }
+  
+  .Leaderboard {
+    margin: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .lista_alumnos {
+    width: 40rem;
+    height: 6rem;
+    background-color: #B6B6FF;
+    border-radius: 1.5rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-size: 3rem;
+    margin-bottom: 2rem;
+  }
+  
+  .cuadro1 {
+    width: 65rem;
+    height: 5rem;
+    background-color: #B6B6FF;
+    display: flex;
+    flex-direction: row;
+    margin-top: 2rem;
+    border-radius: 1.5rem;
+    font-size: 2rem;
+    align-items: center;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    color: white;
+  }
+  
+  .elipse {
+    width: 4rem;
+    height: 4rem;
+    background-color: #D9D9D9;
+    border-radius: 50%;
+  }
+  
+  .perfil {
+    padding-left: 2rem;
+    flex-grow: 1;
+  }
