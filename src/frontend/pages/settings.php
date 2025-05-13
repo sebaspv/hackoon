@@ -1,3 +1,13 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['correo'])) {
+    header("Location: login.html");
+    exit();
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -14,7 +24,7 @@
                     <span class="plus-icon">+</span>
                 </div>
                 <div class="user-info">
-                    <p>Nombre usuario</p>
+                    <p><?php echo htmlspecialchars($_SESSION['nom_usuario']); ?></p>
                     <span class="edit-icon"><img src="../images/lapiz.png" alt="lapiz" class="lapiz"></span>
                 </div>
             </div>
