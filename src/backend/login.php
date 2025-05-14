@@ -21,7 +21,7 @@ if ($conn->connect_error) {
 $usuario_input = trim($_POST['usuario']);
 $contrasena = $_POST['contrasena'];
 
-$stmt = $conn->prepare("SELECT correo, contrasena, nom_usuario FROM alumno WHERE correo = ? OR nom_usuario = ?");
+$stmt = $conn->prepare("SELECT correo, contrasena, nom_usuario, foto_perfil FROM alumno WHERE correo = ? OR nom_usuario = ?");
 $stmt->bind_param("ss", $usuario_input, $usuario_input);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -31,6 +31,7 @@ if ($result->num_rows === 1) {
     if (password_verify($contrasena, $row['contrasena'])) {
         $_SESSION['correo'] = $row['correo']; // VARIABLES DE SESION !!!!!!!!!!!!
         $_SESSION['nom_usuario'] = $row['nom_usuario'];
+        $_SESSION['foto'] = $row['foto_perfil'];
 
         header("Location: ../frontend/pages/settings.php");
         exit();

@@ -49,6 +49,7 @@ $stmt->bind_param("sss", $correo, $contrasena_hash, $usuario);
 if ($stmt->execute()) {
     $_SESSION['correo'] = $correo;
     $_SESSION['nom_usuario'] = $usuario;
+    $_SESSION['foto'] = null;
     header("Location: ../frontend/pages/settings.php");
     exit();
 } else {
