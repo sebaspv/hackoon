@@ -5,7 +5,7 @@ body {
     font-family: 'Inter', sans-serif;
 }
 
-/* Título */
+/* Título superior */
 #title {
     font-weight: bold;
     font-size: xx-large;
@@ -24,14 +24,28 @@ body {
     padding-right: 2dvh;
 }
 
-/* Dificultad */
+/* Etiqueta de dificultad sin color fijo (recibe clase dinámica) */
 #dificultad {
     border-radius: 10px;
-    background-color: #63EF67;
-    color: black;
     font-size: medium;
     padding: 0.3rem 1rem;
     margin-left: 1rem;
+}
+
+/* Clases de colores por dificultad */
+.difficulty-easy {
+    background-color: #22c55e; /* verde */
+    color: white;
+}
+
+.difficulty-medium {
+    background-color: #f59e0b; /* naranja */
+    color: white;
+}
+
+.difficulty-hard {
+    background-color: #ef4444; /* rojo */
+    color: white;
 }
 
 /* Etiquetas */
@@ -56,7 +70,7 @@ body {
     gap: 2rem;
     margin-top: 2rem;
     padding-left: 5rem;
-    align-items: flex-start; /* Alinea los elementos en la parte superior */
+    align-items: flex-start;
 }
 
 /* Caja de pregunta */
@@ -65,7 +79,7 @@ body {
     color: black;
     padding: 1.5rem;
     border-radius: 10px;
-    width: 50vw; /* Ajuste para abarcar el espacio adecuado */
+    width: 50vw;
     min-height: 25vh;
     font-size: 1.2rem;
 }
@@ -122,4 +136,49 @@ body {
     border: none;
     cursor: pointer;
     width: 100%;
+    
+}
+
+/* Mejora visual para inputs tipo radio */
+#respuestas label {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-size: 1.1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    background-color: #ffffff15;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+#respuestas input[type="radio"] {
+    appearance: none;
+    width: 1.1rem;
+    height: 1.1rem;
+    border: 2px solid #8c8c8c;
+    border-radius: 50%;
+    background-color: transparent;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    position: relative;
+}
+
+#respuestas input[type="radio"]:checked::before {
+    content: '';
+    display: block;
+    width: 0.55rem;
+    height: 0.55rem;
+    background-color: #8c8c8c;
+    border-radius: 50%;
+    position: absolute;
+    top: 0.2rem;
+    left: 0.2rem;
+}
+
+/* Hover para botón de entrega */
+#submit_button:hover {
+    background-color: #bbb; /* un gris más oscuro */
+    transform: scale(1.02);
+    transition: all 0.2s ease-in-out;
 }
