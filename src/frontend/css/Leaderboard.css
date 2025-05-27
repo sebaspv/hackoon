@@ -48,8 +48,8 @@ body {
 
 .medal {
   fill: #fff;
-  width: 2.5rem;
-  height: 2.5rem;
+    width: 40px;
+    height: 40px;
 }
 
 /* CONTENEDOR PRINCIPAL DE FILAS */
@@ -74,7 +74,7 @@ body {
   overflow: hidden;
 }
 #leaderboard-container .row:hover {
-  transform: translateY(-2px);
+    transform: scale(1.02);
 }
 
 /* POSICIONES ESPECIALES */

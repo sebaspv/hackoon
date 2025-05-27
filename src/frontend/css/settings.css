@@ -84,7 +84,13 @@ body {
     border-radius: 0.5rem;
     margin-top: 1.5rem;
     cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.2s ease;
   }
+
+.score-button:hover {
+  transform: scale(1.02);
+  background-color: #9B9BF0;
+}
   
   .collections-section {
     text-align: center;
@@ -135,7 +141,13 @@ body {
     border-radius: 0.5rem;
     margin-top: 1.5rem;
     cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.2s ease;
   }
+
+  .play-button:hover {
+  transform: scale(1.02);
+  background-color: #9B9BF0;
+}
 
 
   /* NUEVO: Estilo para input de texto (cambio de nombre) */

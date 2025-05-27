@@ -76,6 +76,12 @@ body {
     background-color: rgba(255, 255, 255, 0.1);
     border-radius: 0.5rem;
     padding: 1.5rem;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.challenge-card:hover {
+  transform: scale(1.02);
+  background-color: rgba(255, 255, 255, 0.05); /* opcional: acentúa el fondo */
 }
 
 .challenge-title {
@@ -90,21 +96,6 @@ body {
     border-radius: 9999px;
     font-size: 0.875rem;
     margin-bottom: 1.5rem;
-}
-
-.difficulty-easy {
-    background-color: #10B981;
-    color: black;
-}
-
-.difficulty-medium {
-    background-color: #F59E0B;
-    color: black;
-}
-
-.difficulty-hard {
-    background-color: #EF4444;
-    color: black;
 }
 
 .tags {

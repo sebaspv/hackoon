@@ -149,7 +149,12 @@ body {
     border-radius: 8px;
     background-color: #ffffff15;
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+#respuestas label:hover {
+  transform: scale(1.02);
+  background-color: rgba(255, 255, 255, 0.25); /* opcional: acentúa el fondo */
 }
 
 #respuestas input[type="radio"] {
@@ -182,3 +187,6 @@ body {
     transform: scale(1.02);
     transition: all 0.2s ease-in-out;
 }
+
+
+
