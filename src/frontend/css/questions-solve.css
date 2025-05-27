@@ -188,5 +188,57 @@ body {
     transition: all 0.2s ease-in-out;
 }
 
+/* ===== FEEDBACK MODAL ===== */
 
+/* Oculta elementos con la clase 'hidden' */
+.hidden {
+  display: none !important;
+}
 
+/* Fondo semi-transparente que cubre toda la pantalla */
+#feedback-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* El propio cuadro de diálogo */
+#feedback-modal {
+  background: #f3f3f3;
+  color: #111;
+  padding: 1.5rem 2rem;
+  border-radius: 0.5rem;
+  max-width: 90%;
+  width: 400px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+/* Texto del mensaje */
+#feedback-message {
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+}
+
+/* Botón de cerrar dentro del modal */
+#feedback-close {
+  background: #65558F;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 0.3rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+#feedback-close:hover {
+    background: #7b66b4;
+    transform: scale(1.075);
+    transition: all 0.2s ease-in-out;
+}

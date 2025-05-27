@@ -65,14 +65,21 @@ body {
   
   .user-info p {
     margin: 0;
-    font-size: 2rem;
+    font-size: 3rem;
   }
   
   .edit-icon {
     margin-left: 0.6rem;
     cursor: pointer;
+    height: 2rem;
+    width: 2rem;
+    transition: transform 0.2s ease, background-color 0.2s ease;
   }
-  
+
+  .edit-icon:hover{
+  transform: scale(1.2);
+  }
+
   .score-button {
     background-color: #65558F;
     width: 9rem;

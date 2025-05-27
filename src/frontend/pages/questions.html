@@ -37,7 +37,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 512 512" width="14" height="14">
                         <path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/>
                     </svg>
-                </div>
+                    </div>
                 </div>
             </div>
             <div>
@@ -58,7 +58,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 512 512" width="14" height="14">
                         <path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/>
                     </svg>
-                </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -68,60 +68,70 @@
         </div>
     </div>
 
-    <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const dificultadSelect = document.getElementById('dificultad_select');
-        const temaSelect = document.getElementById('tema-select');
-        const container = document.getElementById('cards-container');
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const dificultadSelect = document.getElementById('dificultad_select');
+    const temaSelect      = document.getElementById('tema-select');
+    const container       = document.getElementById('cards-container');
 
-        function cargarPreguntas() {
-            const dificultad = dificultadSelect.value;
-            const tema = temaSelect.value;
+    // 1. Al cargar la página, restablece los selects desde localStorage (si existen)
+    const savedDif = localStorage.getItem('hakun_dificultad');
+    const savedTema= localStorage.getItem('hakun_tema');
+    if (savedDif !== null) dificultadSelect.value = savedDif;
+    if (savedTema!== null) temaSelect.value     = savedTema;
 
-            let url = '../../backend/get_questions.php?';
-            if (dificultad) url += `dificultad=${encodeURIComponent(dificultad)}&`;
-            if (tema) url += `tema=${encodeURIComponent(tema)}`;
+    function cargarPreguntas() {
+        const dificultad = dificultadSelect.value;
+        const tema       = temaSelect.value;
 
-            fetch(url)
-                .then(res => res.json())
-                .then(data => {
-                    container.innerHTML = '';
-                    if (data.length === 0) {
-                        container.innerHTML = '<p>No se encontraron preguntas con esos filtros.</p>';
-                        return;
-                    }
+        // 2. Guarda en localStorage cada vez que cambien
+        localStorage.setItem('hakun_dificultad', dificultad);
+        localStorage.setItem('hakun_tema',       tema);
 
-                    data.forEach(p => {
-                        const mapDificultad = {
-                            'fácil': 'difficulty-easy',
-                            'facil': 'difficulty-easy',
-                            'intermedio': 'difficulty-medium',
-                            'difícil': 'difficulty-hard',
-                            'dificil': 'difficulty-hard'
-                        };
-                        const dificultadClass = mapDificultad[p.nombre_dificultad.toLowerCase()] || '';
+        let url = '../../backend/get_questions.php?';
+        if (dificultad) url += `dificultad=${encodeURIComponent(dificultad)}&`;
+        if (tema)       url += `tema=${encodeURIComponent(tema)}`;
 
-                        container.innerHTML += `
-                            <div class="challenge-card">
-                                <h3 class="challenge-title">${p.nombre_pregunta}</h3>
-                                <div class="difficulty-badge ${dificultadClass}">${p.nombre_dificultad}</div>
-                                <div class="tags">
-                                    <span class="tag">${p.nombre_tema}</span>
-                                </div>
-                                <a href="questions-solve.html?id=${p.id_pregunta}" class="challenge-button">Elegir reto</a>
-                            </div>`;
-                    });
-                })
-                .catch(err => {
-                    container.innerHTML = '<p>Error al cargar preguntas.</p>';
-                    console.error(err);
+        fetch(url)
+            .then(res => res.json())
+            .then(data => {
+                container.innerHTML = '';
+                if (!data.length) {
+                    container.innerHTML = '<p>No se encontraron preguntas con esos filtros.</p>';
+                    return;
+                }
+                data.forEach(p => {
+                    const mapD = {
+                        'fácil': 'difficulty-easy', 'facil': 'difficulty-easy',
+                        'intermedio': 'difficulty-medium',
+                        'difícil': 'difficulty-hard','dificil': 'difficulty-hard'
+                    };
+                    const cls = mapD[p.nombre_dificultad.toLowerCase()] || '';
+                    container.innerHTML += `
+                      <div class="challenge-card">
+                        <h3 class="challenge-title">${p.nombre_pregunta}</h3>
+                        <div class="difficulty-badge ${cls}">${p.nombre_dificultad}</div>
+                        <div class="tags">
+                          <span class="tag">${p.nombre_tema}</span>
+                        </div>
+                        <a href="questions-solve.html?id=${p.id_pregunta}" class="challenge-button">
+                          Elegir reto
+                        </a>
+                      </div>`;
                 });
-        }
+            })
+            .catch(err => {
+                container.innerHTML = '<p>Error al cargar preguntas.</p>';
+                console.error(err);
+            });
+    }
 
-        dificultadSelect.addEventListener('change', cargarPreguntas);
-        temaSelect.addEventListener('change', cargarPreguntas);
-        cargarPreguntas(); // al inicio
-    });
-    </script>
+    dificultadSelect.addEventListener('change', cargarPreguntas);
+    temaSelect.addEventListener     ('change', cargarPreguntas);
+
+    cargarPreguntas(); // primera carga
+});
+</script>
+
 </body>
 </html>

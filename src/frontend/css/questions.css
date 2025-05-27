@@ -162,6 +162,12 @@ body {
   -webkit-appearance: none;
   -moz-appearance: none;
   cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.filter-select:hover {
+  transform: scale(1.05);
+  background-color: rgba(255, 255, 255, 0.25); /* opcional: acentúa el fondo */
 }
 
 .filter-select option {

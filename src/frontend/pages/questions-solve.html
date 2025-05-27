@@ -1,117 +1,128 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Resolver Pregunta</title>
-    <link rel="stylesheet" href="../css/questions-solve.css">
+  <meta charset="UTF-8">
+  <title>Resolver Pregunta</title>
+  <link rel="stylesheet" href="../css/questions-solve.css">
 </head>
 <body>
-    <div id="title">
-        <a id="arrow_back" href="questions.html">
-            <img src="../images/return.png" alt="Volver">
-        </a>
-        <span id="tema">[Tema]</span>
-        <span id="dificultad" class="badge">[Dificultad]</span>
+  <!-- Botón volver y título -->
+  <div id="title">
+    <a id="arrow_back" href="questions.html">
+      <img src="../images/return.png" alt="Volver">
+    </a>
+    <span id="tema">[Tema]</span>
+    <span id="dificultad" class="badge">[Dificultad]</span>
+  </div>
+
+  <!-- Etiquetas (tags) -->
+  <div id="etiquetas"></div>
+
+  <!-- Contenedores de pregunta y pista -->
+  <div id="recuadros">
+    <div id="recuadro-pregunta">
+      <div class="titulo">Pregunta</div>
+      <div id="pregunta" class="pregunta">Cargando...</div>
+      <div id="respuestas"></div>
     </div>
-
-    <div id="etiquetas"></div>
-
-    <div id="recuadros">
-        <div id="recuadro-pregunta">
-            <div class="titulo">Pregunta</div>
-            <div id="pregunta" class="pregunta">Cargando...</div>
-            <div id="respuestas"></div>
-        </div>
-
-        <div id="recuadro-pista">
-            <div class="titulo"><img src="../images/image 4.png"> Pista</div>
-            <div class="pista">Lee con atención antes de responder.</div>
-        </div>
+    <div id="recuadro-pista">
+      <div class="titulo"><img src="../images/image 4.png" alt="Pista"> Pista</div>
+      <div class="pista">Lee con atención antes de responder.</div>
     </div>
+  </div>
 
-    <div id="submit">
-        <button id="submit_button">
-            <img src="../images/Vector.png">
-            Completar reto
-        </button>
+  <!-- Botón completar -->
+  <div id="submit">
+    <button id="submit_button">
+      <img src="../images/Vector.png" alt="">
+      Completar reto
+    </button>
+  </div>
+
+  <!-- MODAL DE FEEDBACK -->
+  <div id="feedback-overlay" class="hidden">
+    <div id="feedback-modal">
+      <p id="feedback-message"></p>
+      <button id="feedback-close">Cerrar</button>
     </div>
+  </div>
 
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const id = new URLSearchParams(window.location.search).get('id');
-        if (!id) {
-            document.getElementById('pregunta').innerText = 'ID de pregunta no válido.';
-            return;
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const id = new URLSearchParams(window.location.search).get('id');
+    if (!id) {
+      document.getElementById('pregunta').innerText = 'ID de pregunta no válido.';
+      return;
+    }
+
+    fetch(`../../backend/get_question_by_id.php?id=${id}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.error) {
+          document.getElementById('pregunta').innerText = data.error;
+          return;
         }
 
-        fetch(`../../backend/get_question_by_id.php?id=${id}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    document.getElementById('pregunta').innerText = data.error;
-                    return;
-                }
+        // Mostrar tema y dificultad
+        document.getElementById('pregunta').innerText = data.pregunta;
+        document.getElementById('tema').innerText = data.nombre_tema;
+        const difSpan = document.getElementById('dificultad');
+        difSpan.innerText = data.nombre_dificultad;
+        difSpan.classList.remove('difficulty-easy','difficulty-medium','difficulty-hard');
+        const mapClases = {
+          'facil': 'difficulty-easy',
+          'fácil': 'difficulty-easy',
+          'intermedio': 'difficulty-medium',
+          'dificil': 'difficulty-hard',
+          'difícil': 'difficulty-hard'
+        };
+        const cls = mapClases[data.nombre_dificultad.toLowerCase()];
+        if (cls) difSpan.classList.add(cls);
 
-                document.getElementById('pregunta').innerText = data.pregunta;
-                document.getElementById('tema').innerText = data.nombre_tema;
+        // Renderizar respuestas
+        const opciones = [data.respuesta_correcta, data.respuesta1, data.respuesta2, data.respuesta3]
+                          .sort(() => Math.random() - .5);
+        const cont = document.getElementById('respuestas');
+        cont.innerHTML = '';
+        opciones.forEach(op => {
+          cont.innerHTML += `<label><input type="radio" name="respuesta" value="${op}"> ${op}</label>`;
+        });
 
-                const difSpan = document.getElementById('dificultad');
-                difSpan.innerText = data.nombre_dificultad;
+        // Helpers y referencias modal
+        function limpiar(t) {
+          return t.trim().toLowerCase()
+                  .replace(/['"`]/g,'')
+                  .normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+        }
+        const overlay = document.getElementById('feedback-overlay');
+        const msgEl   = document.getElementById('feedback-message');
+        const btnClose= document.getElementById('feedback-close');
 
-                const dificultadClass = {
-                    'facil': 'difficulty-easy',
-                    'fácil': 'difficulty-easy',
-                    'intermedio': 'difficulty-medium',
-                    'difícil': 'difficulty-hard',
-                    'dificil': 'difficulty-hard'
-                };
-
-                const clase = dificultadClass[data.nombre_dificultad.toLowerCase()] || '';
-                difSpan.classList.remove("difficulty-easy", "difficulty-medium", "difficulty-hard");
-                if (clase) difSpan.classList.add(clase);
-
-                const opciones = [data.respuesta_correcta, data.respuesta1, data.respuesta2, data.respuesta3];
-                const mezcladas = opciones.sort(() => Math.random() - 0.5);
-                const respuestasDiv = document.getElementById('respuestas');
-                respuestasDiv.innerHTML = '';
-
-                mezcladas.forEach(op => {
-                    respuestasDiv.innerHTML += `
-                        <label><input type="radio" name="respuesta" value="${op}"> ${op}</label><br>`;
-                });
-
-                function limpiar(texto) {
-                    return texto
-                        .trim()
-                        .toLowerCase()
-                        .replace(/['"`]/g, "")
-                        .normalize("NFD")
-                        .replace(/[\u0300-\u036f]/g, "");
-                }
-
-                document.getElementById('submit_button').addEventListener('click', () => {
-                    const seleccionada = document.querySelector('input[name="respuesta"]:checked');
-                    if (!seleccionada) {
-                        alert("Selecciona una respuesta");
-                        return;
-                    }
-
-                    const seleccion = limpiar(seleccionada.value);
-                    const correcta = limpiar(data.respuesta_correcta);
-
-                    if (seleccion === correcta) {
-                        alert("¡Correcto! ✅");
-                        window.location.href = "questions.html";
-                    } else {
-                        alert(`❌ Incorrecto.`);
-                    }
-                });
-            })
-            .catch(error => {
-                console.error('Error al cargar la pregunta:', error);
-                document.getElementById('pregunta').innerText = 'Error al obtener la pregunta.';
-            });
-    });
-    </script>
+        // Al hacer click en completar
+        document.getElementById('submit_button').addEventListener('click', () => {
+          const sel = document.querySelector('input[name="respuesta"]:checked');
+          if (!sel) {
+            alert('Selecciona una respuesta');
+            return;
+          }
+          const esOk = limpiar(sel.value) === limpiar(data.respuesta_correcta);
+          if (esOk) {
+            msgEl.textContent = '¡Correcto! ✅';
+          } else {
+            msgEl.textContent = `❌ Incorrecto. Lee la pregunta nuevamente.`;
+          }
+          overlay.classList.remove('hidden');
+          btnClose.onclick = () => {
+            overlay.classList.add('hidden');
+            if (esOk) window.location.href = 'questions.html';
+          };
+        });
+      })
+      .catch(err => {
+        console.error(err);
+        document.getElementById('pregunta').innerText = 'Error al obtener la pregunta.';
+      });
+  });
+  </script>
 </body>
 </html>
