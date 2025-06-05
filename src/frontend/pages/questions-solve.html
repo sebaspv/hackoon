@@ -5,6 +5,7 @@
   <title>Resolver Pregunta</title>
   <link rel="stylesheet" href="../css/questions-solve.css">
 </head>
+
 <body>
   <!-- Botón volver y título -->
   <div id="title">
@@ -15,10 +16,10 @@
     <span id="dificultad" class="badge">[Dificultad]</span>
   </div>
 
-  <!-- Etiquetas (tags) -->
+  <!-- Etiquetas -->
   <div id="etiquetas"></div>
 
-  <!-- Contenedores de pregunta y pista -->
+  <!-- Pregunta y pista -->
   <div id="recuadros">
     <div id="recuadro-pregunta">
       <div class="titulo">Pregunta</div>
@@ -39,7 +40,7 @@
     </button>
   </div>
 
-  <!-- MODAL DE FEEDBACK -->
+  <!-- Modal de feedback -->
   <div id="feedback-overlay" class="hidden">
     <div id="feedback-modal">
       <p id="feedback-message"></p>
@@ -47,6 +48,7 @@
     </div>
   </div>
 
+  <!-- SCRIPT -->
   <script>
   document.addEventListener('DOMContentLoaded', () => {
     const id = new URLSearchParams(window.location.search).get('id');
@@ -63,59 +65,81 @@
           return;
         }
 
-        // Mostrar tema y dificultad
+        // Mostrar pregunta y detalles
         document.getElementById('pregunta').innerText = data.pregunta;
         document.getElementById('tema').innerText = data.nombre_tema;
         const difSpan = document.getElementById('dificultad');
         difSpan.innerText = data.nombre_dificultad;
-        difSpan.classList.remove('difficulty-easy','difficulty-medium','difficulty-hard');
-        const mapClases = {
+
+        difSpan.classList.remove('difficulty-easy', 'difficulty-medium', 'difficulty-hard');
+        const clases = {
           'facil': 'difficulty-easy',
           'fácil': 'difficulty-easy',
           'intermedio': 'difficulty-medium',
           'dificil': 'difficulty-hard',
           'difícil': 'difficulty-hard'
         };
-        const cls = mapClases[data.nombre_dificultad.toLowerCase()];
+        const cls = clases[data.nombre_dificultad.toLowerCase()];
         if (cls) difSpan.classList.add(cls);
 
-        // Renderizar respuestas
+        // Mostrar respuestas
         const opciones = [data.respuesta_correcta, data.respuesta1, data.respuesta2, data.respuesta3]
-                          .sort(() => Math.random() - .5);
+                          .sort(() => Math.random() - 0.5);
         const cont = document.getElementById('respuestas');
         cont.innerHTML = '';
         opciones.forEach(op => {
           cont.innerHTML += `<label><input type="radio" name="respuesta" value="${op}"> ${op}</label>`;
         });
 
-        // Helpers y referencias modal
+        // Helpers
         function limpiar(t) {
           return t.trim().toLowerCase()
                   .replace(/['"`]/g,'')
                   .normalize('NFD').replace(/[\u0300-\u036f]/g,'');
         }
+
         const overlay = document.getElementById('feedback-overlay');
         const msgEl   = document.getElementById('feedback-message');
         const btnClose= document.getElementById('feedback-close');
 
-        // Al hacer click en completar
         document.getElementById('submit_button').addEventListener('click', () => {
           const sel = document.querySelector('input[name="respuesta"]:checked');
           if (!sel) {
             alert('Selecciona una respuesta');
             return;
           }
-          const esOk = limpiar(sel.value) === limpiar(data.respuesta_correcta);
-          if (esOk) {
-            msgEl.textContent = '¡Correcto! ✅';
-          } else {
-            msgEl.textContent = `❌ Incorrecto. Lee la pregunta nuevamente.`;
-          }
-          overlay.classList.remove('hidden');
-          btnClose.onclick = () => {
-            overlay.classList.add('hidden');
-            if (esOk) window.location.href = 'questions.html';
-          };
+
+          fetch('../../backend/submit_answer.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              id_pregunta: id,
+              respuesta: sel.value
+            })
+          })
+          .then(res => res.json())
+          .then(resp => {
+            if (resp.error) {
+              msgEl.textContent = '⚠️ ' + resp.error;
+            } else if (resp.correcto) {
+              msgEl.textContent = `✅ ¡Correcto! Ganaste ${resp.puntos_asignados} puntos.`;
+            } else {
+              msgEl.textContent = '❌ Incorrecto. Inténtalo nuevamente.';
+            }
+
+            overlay.classList.remove('hidden');
+            btnClose.onclick = () => {
+              overlay.classList.add('hidden');
+              if (resp.correcto) {
+                window.location.href = 'questions.html';
+              }
+            };
+          })
+          .catch(err => {
+            console.error(err);
+            msgEl.textContent = 'Error al enviar la respuesta.';
+            overlay.classList.remove('hidden');
+          });
         });
       })
       .catch(err => {
