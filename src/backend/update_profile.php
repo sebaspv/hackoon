@@ -5,10 +5,10 @@ use Aws\Exception\AwsException;
 
 session_start();
 
-$host = 'b0jwu4873i0kfcwir8pu-mysql.services.clever-cloud.com';
-$db = 'b0jwu4873i0kfcwir8pu';
-$user = 'uvtttqdpyhlbrr52';
-$pass = 'WOW79qjGvBwKpeb8HHaj';
+$host = 'xxxxxxxx';
+$db = 'xxxxxxxx';
+$user = 'xxxxxxxx';
+$pass = 'xxxxxxxx';
 
 $conn = new mysqli($host, $user, $pass, $db);
 if ($conn->connect_error) {
@@ -21,11 +21,11 @@ $nuevo_nombre = $_POST['nuevo_nombre'];
 $url_imagen = null;
 
 // Parámetros de Cellar S3
-$bucketName = 'global';
-$region = 'fr-par';
-$endpoint = 'cellar-c2.services.clever-cloud.com';
-$key = '32N3G2LO1N9E55V0Y3X9';
-$secret = '02BaN1XK6qfDXt12RxtHqnFkKOP6clORbanrSJcn';
+$bucketName = 'xxxxxxxx';
+$region = 'xxxxxxxx';
+$endpoint = 'xxxxxxxx';
+$key = 'xxxxxxxx';
+$secret = 'xxxxxxxx';
 
 // Crear cliente S3
 $s3 = new S3Client([

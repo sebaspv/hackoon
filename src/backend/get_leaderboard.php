@@ -9,10 +9,10 @@ if (!isset($_SESSION['correo'])) {
 }
 
 // Conexión a la base de datos (mantén tus credenciales)
-$host = 'bsbmop1y4ql9zt9yf5if-mysql.services.clever-cloud.com';
-$db   = 'bsbmop1y4ql9zt9yf5if';
-$user = 'usxyw0jztnkdqg9a';
-$pass = 'GGa6FIz1nt6vSQ5XZANo';
+$host = 'xxxxxxxx';
+$db   = 'xxxxxxxx';
+$user = 'xxxxxxxx';
+$pass = 'xxxxxxxx';
 
 $conn = new mysqli($host, $user, $pass, $db);
 $conn->set_charset('utf8mb4');
