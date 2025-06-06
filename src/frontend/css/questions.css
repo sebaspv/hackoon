@@ -24,12 +24,12 @@ body {
     margin-bottom: 2rem;
 }
 
-.arrow_back {
+.logout {
     cursor: pointer;
     padding: 0.5rem;
 }
 
-.arrow_back:hover {
+.logout:hover {
     transform: scale(1.3);
     transition: all 0.2s ease-in-out;
 }
@@ -166,7 +166,7 @@ body {
 }
 
 .filter-select:hover {
-  transform: scale(1.05);
+  transform: scale(1.01);
   background-color: rgba(255, 255, 255, 0.25); /* opcional: acentúa el fondo */
 }
 
