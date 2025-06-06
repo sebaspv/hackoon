@@ -46,9 +46,9 @@ CREATE TABLE pregunta_tema (
 CREATE TABLE coleccionable (
     id_objeto INT PRIMARY KEY,
     descripcion TEXT NOT NULL,
-    id_pregunta_desbloqueo INT,
+    id_tema_desbloqueo INT,
     imagen_objeto VARCHAR(100),
-    FOREIGN KEY (id_pregunta_desbloqueo) REFERENCES pregunta(id_pregunta)
+    FOREIGN KEY (id_tema_desbloqueo) REFERENCES tema(id_tema)
         ON DELETE SET NULL
         ON UPDATE CASCADE
 );

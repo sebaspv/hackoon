@@ -55,6 +55,8 @@
       return;
     }
 
+    let currentQuestionData = null
+
     fetch(`../../backend/get_question_by_id.php?id=${id}`)
       .then(res => res.json())
       .then(data => {
@@ -62,6 +64,8 @@
           document.getElementById('pregunta').innerText = data.error;
           return;
         }
+
+        currentQuestionData = data;
 
         // Mostrar tema y dificultad
         document.getElementById('pregunta').innerText = data.pregunta;
@@ -106,8 +110,29 @@
             return;
           }
           const esOk = limpiar(sel.value) === limpiar(data.respuesta_correcta);
+
+          fetch('../../backend/save_progress.php',{
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              id_pregunta: data.id_pregunta,
+              respuesta_correcta: esOk
+            })
+          })
+          .then(response=>response.json())
+          .then(result=>{
+            if (result.error){
+              console.error('Error al guardar progreso:', result.error);
+            }
+          })
+          .catch(error=>{
+            console.error('Error de red:' , error);
+          });
+
           if (esOk) {
-            msgEl.textContent = '¡Correcto! ✅';
+            msgEl.textContent = '¡Correcto! ✅ ';
           } else {
             msgEl.textContent = `❌ Incorrecto. Lee la pregunta nuevamente.`;
           }

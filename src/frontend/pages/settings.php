@@ -5,6 +5,35 @@ if (!isset($_SESSION['correo'])) {
     header("Location: login.html");
     exit();
 }
+
+require_once '../../backend/config.php';
+
+function obtener_frutas_usuario($pdo, $correo_usuario){
+    $stmt=$pdo->prepare("
+        SELECT c.*
+        FROM coleccionable c
+        JOIN objeto_usuario ou ON c.id_objeto=ou.id_objeto
+        WHERE ou.correo_usuario=?
+    ");
+    $stmt->execute([$correo_usuario]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+$frutas_config = [
+    1 => ['nombre' => 'manzana', 'imagen' => '../images/manzana.png', 'tema' => 'Algoritmos'],
+    2 => ['nombre' => 'limón', 'imagen' => '../images/limon.png', 'tema' => 'Tipo de Datos'],
+    3 => ['nombre' => 'fresa', 'imagen' => '../images/fresa.png', 'tema' => 'Expresiones'],
+    4 => ['nombre' => 'pera', 'imagen' => '../images/pera.png', 'tema' => 'Funciones'],
+    5 => ['nombre' => 'pina', 'imagen' => '../images/pina.png', 'tema' => 'Condicionales'],
+    6 => ['nombre' => 'cereza', 'imagen' => '../images/cereza.png', 'tema' => 'Ciclos'],
+    7 => ['nombre' => 'uva', 'imagen' => '../images/uva.png', 'tema' => 'Listas y Matrices'],
+    8 => ['nombre' => 'platano', 'imagen' => '../images/platano.png', 'tema' => 'Archivos'],
+    9 => ['nombre' => 'sandia', 'imagen' => '../images/sandia.png', 'tema' => 'Maestro']
+];
+
+$frutas_desbloqueadas=obtener_frutas_usuario($pdo, $_SESSION['correo']);
+$ids_desbloqueadas=array_column($frutas_desbloqueadas, 'id_objeto');
+
 ?>
 
 <!DOCTYPE html>
@@ -13,20 +42,17 @@ if (!isset($_SESSION['correo'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Página de Usuario</title>
-    <link rel="stylesheet" href="../css/settings.css">
+    <link rel="stylesheet" href="../css/settings.css?v=<?php echo time(); ?>">
 </head>
 <body>
     <div class="container">
-        <!-- Lado izquierdo: perfil -->
         <div class="profile-section">
             <div class="botton-section">
-                <!-- Imagen de perfil -->
                 <div class="profile-pic">
                     <img src="<?php echo isset($_SESSION['foto']) ? htmlspecialchars($_SESSION['foto']) : '../images/default.png'; ?>" class="perfil-imagen" id="preview">
                     <span class="plus-icon <?php echo isset($_SESSION['foto']) ? 'hidden' : ''; ?>" onclick="document.getElementById('edit-form').style.display='flex';">+</span>
                 </div>
 
-                <!-- Nombre del usuario -->
                 <div class="user-info">
                     <p><?php echo htmlspecialchars($_SESSION['nom_usuario']); ?></p>
                     <span class="edit-icon" onclick="document.getElementById('edit-form').style.display='flex';">
@@ -37,11 +63,8 @@ if (!isset($_SESSION['correo'])) {
                 </div>
             </div>
 
-            <!-- Formulario de edición -->
             <form id="edit-form" action="../../backend/update_profile.php" method="POST" enctype="multipart/form-data" class="form-controls" style="display: none;">
                 <input type="text" name="nuevo_nombre" placeholder="Nuevo nombre" required>
-
-                <!-- Botón estilizado para imagen -->
                 <label for="nueva_foto" class="custom-file-upload">Seleccionar imagen</label>
                 <input type="file" id="nueva_foto" name="nueva_foto" class="hidden" accept="image/*" onchange="previewImage(event)">
 
@@ -51,27 +74,40 @@ if (!isset($_SESSION['correo'])) {
             <a href="Leaderboard.html"><button class="score-button">Leaderboard</button></a>
         </div>
 
-        <!-- Lado derecho: colecciones -->
         <div class="collections-section">
             <h2>Colecciones</h2>
             <div class="collections-grid">
-                <div class="collection-row">
-                    <div class="collection-item"><img src="../images/apple.png" alt="manzana"></div>
-                    <div class="collection-item"><img src="../images/lemon.png" alt="limón"></div>
-                    <div class="collection-item"><img src="../images/carrot.png" alt="zanahoria"></div>
-                </div>
-                <div class="collection-row">
-                    <div class="collection-item locked"><img src="../images/lock.png" alt="bloqueado"></div>
-                    <div class="collection-item locked"><img src="../images/lock.png" alt="bloqueado"></div>
-                    <div class="collection-item locked"><img src="../images/lock.png" alt="bloqueado"></div>
-                </div>
-                <div class="collection-row">
-                    <div class="collection-item locked"><img src="../images/lock.png" alt="bloqueado"></div>
-                    <div class="collection-item locked"><img src="../images/lock.png" alt="bloqueado"></div>
-                    <div class="collection-item locked"><img src="../images/lock.png" alt="bloqueado"></div>
-                </div>
+                <?php
+                for ($fila=0; $fila<3; $fila++){
+                    echo '<div class="collection-row">';
+                    for ($col=1; $col<=3; $col++){
+                        $indice=($fila*3)+$col;
+                        $desbloqueada=in_array($indice, $ids_desbloqueadas);
+                        $es_especial=($indice==9);
+
+                        if($desbloqueada){
+                            $clase_extra=$es_especial?'unlocked especial':'unlocked';
+                            $imagen=$frutas_config[$indice]['imagen'];
+                            $tooltip=$frutas_config[$indice]['nombre'] . ' - ' . $frutas_config[$indice]['tema'];
+                        } else{
+                            $clase_extra='locked';
+                            $imagen='../images/lock.png';
+                            $tooltip=$es_especial?'sandia-Completa todos los temas':'Completa el tema: ' . $frutas_config[$indice]['tema'];                      
+                        }
+
+                        echo '<div class="collection-item ' . $clase_extra . '" title="' . htmlspecialchars($tooltip) . '">';
+                        echo '<img src="' . $imagen . '"alt="' . ($desbloqueada ? $frutas_config[$indice]['nombre']: 'bloqueado') . '">';
+                        echo '</div>';
+                    }
+                    echo '</div>';
+                }
+                ?>
             </div>
             <a href="questions.html"><button class="play-button">Jugar</button></a>
+
+            <div style="margin-top: 1rem; text-align: center; color: #ccc; font-size: 0.9rem;">
+                Frutas desbloqueadas: <?php echo count($frutas_desbloqueadas); ?>/9
+            </div>
         </div>
     </div>
 

@@ -7,10 +7,10 @@ if (session_status() === PHP_SESSION_ACTIVE) {
 
 session_start();
 
-$host = 'xxxxxxx';
-$db = 'xxxxxxx';
-$user = 'xxxxxxx';
-$pass = 'xxxxxxx';
+$host = 'xxxxxxxx';
+$db = 'xxxxxxxx';
+$user = 'xxxxxxxx';
+$pass = 'xxxxxxxx';
 
 $conn = new mysqli($host, $user, $pass, $db);
 if ($conn->connect_error) {

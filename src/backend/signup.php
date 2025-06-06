@@ -2,10 +2,10 @@
 session_start();
 
 // conectar a DB
-$host = 'xxxxxxx';
-$db = 'xxxxxxx';
-$user = 'xxxxxxx';
-$pass = 'xxxxxxx';
+$host = 'b0jwu4873i0kfcwir8pu-mysql.services.clever-cloud.com';
+$db = 'b0jwu4873i0kfcwir8pu';
+$user = 'uvtttqdpyhlbrr52';
+$pass = 'WOW79qjGvBwKpeb8HHaj';
 
 $conn = new mysqli($host, $user, $pass, $db);
 if ($conn->connect_error) {
