@@ -29,12 +29,13 @@ $secret = 'xxxxxxxx';
 
 // Crear cliente S3
 $s3 = new S3Client([
-    'version' => 'latest',
-    'region' => $region,
-    'endpoint' => $endpoint,
+    'version'     => 'latest',
+    'region'      => $region,
+    'endpoint'    => "https://$endpoint",
+    'use_path_style_endpoint' => true,
     'credentials' => [
-        'key' => $key,
-        'secret' => $secret,
+        'key'    => $key,
+        'secret' => $sec
     ],
 ]);
 

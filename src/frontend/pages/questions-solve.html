@@ -7,7 +7,7 @@
 </head>
 
 <body>
-  <!-- Botón volver y título -->
+  <!-- Header -->
   <div id="title">
     <a id="arrow_back" href="questions.html">
       <img src="../images/return.png" alt="Volver">
@@ -27,7 +27,9 @@
       <div id="respuestas"></div>
     </div>
     <div id="recuadro-pista">
-      <div class="titulo"><img src="../images/image 4.png" alt="Pista"> Pista</div>
+      <div class="titulo">
+        <img src="../images/image 4.png" alt="Pista"> Pista
+      </div>
       <div class="pista">Lee con atención antes de responder.</div>
     </div>
   </div>
@@ -35,8 +37,7 @@
   <!-- Botón completar -->
   <div id="submit">
     <button id="submit_button">
-      <img src="../images/Vector.png" alt="">
-      Completar reto
+      <img src="../images/Vector.png" alt=""> Completar reto
     </button>
   </div>
 
@@ -44,6 +45,7 @@
   <div id="feedback-overlay" class="hidden">
     <div id="feedback-modal">
       <p id="feedback-message"></p>
+      <img id="feedback-image" src="" alt="Resultado" class="hidden" style="max-width: 200px; margin: 10px auto; display: block;" />
       <button id="feedback-close">Cerrar</button>
     </div>
   </div>
@@ -57,8 +59,6 @@
       return;
     }
 
-    let currentQuestionData = null
-
     fetch(`../../backend/get_question_by_id.php?id=${id}`)
       .then(res => res.json())
       .then(data => {
@@ -67,28 +67,24 @@
           return;
         }
 
-        currentQuestionData = data;
-
-        // Mostrar tema y dificultad
         document.getElementById('pregunta').innerText = data.pregunta;
         document.getElementById('tema').innerText = data.nombre_tema;
+
         const difSpan = document.getElementById('dificultad');
         difSpan.innerText = data.nombre_dificultad;
-
         difSpan.classList.remove('difficulty-easy', 'difficulty-medium', 'difficulty-hard');
+
         const clases = {
-          'facil': 'difficulty-easy',
-          'fácil': 'difficulty-easy',
+          'facil': 'difficulty-easy', 'fácil': 'difficulty-easy',
           'intermedio': 'difficulty-medium',
-          'dificil': 'difficulty-hard',
-          'difícil': 'difficulty-hard'
+          'dificil': 'difficulty-hard', 'difícil': 'difficulty-hard'
         };
         const cls = clases[data.nombre_dificultad.toLowerCase()];
         if (cls) difSpan.classList.add(cls);
 
-        // Mostrar respuestas
         const opciones = [data.respuesta_correcta, data.respuesta1, data.respuesta2, data.respuesta3]
                           .sort(() => Math.random() - 0.5);
+
         const cont = document.getElementById('respuestas');
         cont.innerHTML = '';
         opciones.forEach(op => {
@@ -102,9 +98,10 @@
                   .normalize('NFD').replace(/[\u0300-\u036f]/g,'');
         }
 
-        const overlay = document.getElementById('feedback-overlay');
-        const msgEl   = document.getElementById('feedback-message');
-        const btnClose= document.getElementById('feedback-close');
+        const overlay  = document.getElementById('feedback-overlay');
+        const msgEl    = document.getElementById('feedback-message');
+        const imgEl    = document.getElementById('feedback-image');
+        const btnClose = document.getElementById('feedback-close');
 
         document.getElementById('submit_button').addEventListener('click', () => {
           const sel = document.querySelector('input[name="respuesta"]:checked');
@@ -112,38 +109,44 @@
             alert('Selecciona una respuesta');
             return;
           }
-          const esOk = limpiar(sel.value) === limpiar(data.respuesta_correcta);
 
-          fetch('../../backend/save_progress.php',{
+          fetch('../../backend/save_progress.php', {
             method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              id_pregunta: data.id_pregunta,
-              respuesta_correcta: esOk
+              id_pregunta: id,
+              respuesta: sel.value
             })
           })
-          .then(response=>response.json())
-          .then(result=>{
-            if (result.error){
-              console.error('Error al guardar progreso:', result.error);
+          .then(res => res.json())
+          .then(resp => {
+            if (resp.error) {
+              msgEl.textContent = '⚠️ ' + resp.error;
+              imgEl.classList.add('hidden');
+            } else if (resp.correcto) {
+              msgEl.textContent = `✅ ¡Correcto! Ganaste ${resp.puntos_asignados} puntos.`;
+              imgEl.src = "../images/mapache_ganador.png";
+              imgEl.classList.remove('hidden');
+            } else {
+              msgEl.textContent = '❌ Incorrecto. Inténtalo nuevamente.';
+              imgEl.src = "../images/mapache_triste.png";
+              imgEl.classList.remove('hidden');
             }
-          })
-          .catch(error=>{
-            console.error('Error de red:' , error);
-          });
 
-          if (esOk) {
-            msgEl.textContent = '¡Correcto! ✅ ';
-          } else {
-            msgEl.textContent = `❌ Incorrecto. Lee la pregunta nuevamente.`;
-          }
-          overlay.classList.remove('hidden');
-          btnClose.onclick = () => {
-            overlay.classList.add('hidden');
-            if (esOk) window.location.href = 'questions.html';
-          };
+            overlay.classList.remove('hidden');
+            btnClose.onclick = () => {
+              overlay.classList.add('hidden');
+              if (resp.correcto) {
+                window.location.href = 'questions.html';
+              }
+            };
+          })
+          .catch(err => {
+            console.error(err);
+            msgEl.textContent = 'Error al enviar la respuesta.';
+            imgEl.classList.add('hidden');
+            overlay.classList.remove('hidden');
+          });
         });
       })
       .catch(err => {
