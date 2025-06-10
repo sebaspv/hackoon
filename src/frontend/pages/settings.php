@@ -71,7 +71,7 @@ $ids_desbloqueadas=array_column($frutas_desbloqueadas, 'id_objeto');
                 <input type="submit" value="Guardar cambios">
             </form>
 
-            <a href="Leaderboard.html"><button class="score-button">Leaderboard</button></a>
+            <a href="leaderboard.html"><button class="score-button">Leaderboard</button></a>
         </div>
 
         <div class="collections-section">

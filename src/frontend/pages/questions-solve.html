@@ -124,11 +124,11 @@
               msgEl.textContent = '⚠️ ' + resp.error;
               imgEl.classList.add('hidden');
             } else if (resp.correcto) {
-              msgEl.textContent = `✅ ¡Correcto! Ganaste ${resp.puntos_asignados} puntos.`;
+              msgEl.textContent = `¡Correcto! Ganaste ${resp.puntos_asignados} puntos.`;
               imgEl.src = "../images/mapache_ganador.png";
               imgEl.classList.remove('hidden');
             } else {
-              msgEl.textContent = '❌ Incorrecto. Inténtalo nuevamente.';
+              msgEl.textContent = 'Incorrecto. Inténtalo nuevamente.';
               imgEl.src = "../images/mapache_triste.png";
               imgEl.classList.remove('hidden');
             }
